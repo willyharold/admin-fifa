@@ -1,0 +1,510 @@
+<!-- content -->
+<div id="content" class="app-content" role="main">
+    <div class="box">
+        <!-- Content Navbar -->
+        <div class="navbar md-whiteframe-z1 no-radius blue">
+            <!-- Open side - Naviation on mobile -->
+            <a md-ink-ripple data-toggle="modal" data-target="#aside" class="navbar-item pull-left visible-xs visible-sm"><i class="mdi-navigation-menu i-24"></i></a>
+
+            <!-- Page title - Bind to $state's title -->
+            <div class="navbar-item pull-left h4">Inscription</div>
+
+            <!-- / -->
+            <!-- Common tools -->
+            <ul class="nav nav-sm navbar-tool pull-right">
+                <li>
+                    <a md-ink-ripple ui-toggle-class="show" target="#search">
+                        <i class="mdi-action-search i-24"></i>
+                    </a>
+                </li>
+            </ul>
+            <div class="pull-right" ui-view="navbar@"></div>
+            <!-- / -->
+            <!-- Search form -->
+            <div id="search" class="pos-abt w-full h-full blue hide">
+                <div class="box">
+                    <div class="box-col w-56 text-center">
+                        <!-- hide search form -->
+                        <a md-ink-ripple class="navbar-item inline" ui-toggle-class="show" target="#search"><i class="mdi-navigation-arrow-back i-24"></i></a>
+                    </div>
+                    <div class="box-col v-m">
+                        <!-- bind to app.search.content -->
+                        <input class="form-control input-lg no-bg no-border" placeholder="Rechercher" ng-model="app.search.content">
+                    </div>
+                    <div class="box-col w-56 text-center">
+                        <a md-ink-ripple class="navbar-item inline"></a>
+                    </div>
+                </div>
+            </div>
+            <!-- / -->
+        </div>
+        <!-- Content -->
+
+        <div class="box-row">
+            <div class="box-cell">
+                <div class="box-inner padding">
+
+
+                    <div class="panel panel-default">
+                        <div class="table-responsive">
+                            <p-dataTable emptyMessage="Aucun élément à afficher." [(selection)]="selectedInsc" class="table table-striped no-margin"
+                                selectionMode="single" dataKey="id" [value]="inscs" [rows]="10" [paginator]="true" #dt>
+                                <p-header>Liste des élèves inscrits</p-header>
+                                <p-column header="No" [style]="{'width':'5%'}">
+                                    <ng-template let-ri="rowIndex" pTemplate="body">
+                                        {{ri+1}}
+                                    </ng-template>
+                                </p-column>
+                                <p-column field="eleve.matricule" header="Matricule" [sortable]="true" [filter]="true" filterPlaceholder="Rechercher">
+                                    <ng-template let-col="rowData" pTemplate="body">
+                                        <span>{{col.eleve.matricule}}</span>
+                                    </ng-template>
+                                </p-column>
+                                <p-column field="eleve.nom" header="Elève" [sortable]="true" [filter]="true" filterPlaceholder="Rechercher">
+                                    <ng-template let-col="rowData" pTemplate="body">
+                                        <span>{{col.eleve.nom}} {{col.eleve.prenom}}</span>
+                                    </ng-template>
+                                </p-column>
+                                <p-column field="classe.niveau.libele" header="Classe" [sortable]="true" [filter]="true" filterPlaceholder="Rechercher">
+                                    <ng-template let-col="rowData" pTemplate="body">
+                                        <span>{{col.classe.niveau.libele}} {{col.classe.serie}}</span>
+                                    </ng-template>
+                                </p-column>
+                                <p-column field="annee.libele" header="Année académique" [sortable]="true" [filter]="true" filterPlaceholder="Rechercher"></p-column>
+
+                                <p-column [style]="{'width':'33%'}" styleClass="col-button">
+                                    <ng-template pTemplate="header">
+                                        Actions
+                                    </ng-template>
+                                    <ng-template let-selected="rowData" pTemplate="body">
+                                        <button class="ui-button-info" type="button" pButton (click)="showDialogDetails(selected)" icon="fa-eye" label="Détails"></button>
+                                        <button type="button" pButton (click)="showDialogToEdit(selected)" icon="fa-edit" label="Modifier"></button>
+                                        <button class="ui-button-danger" type="button" pButton (click)="delete(selected)" icon="fa-trash-o" label="Supprimer"></button>
+                                    </ng-template>
+
+                                </p-column>
+                                <p-footer>
+                                    <div class="ui-grid-row ">
+                                        <div class="ui-grid-col-6">
+                                            <button type="button" pButton icon="fa-plus" style="float: left" (click)="showDialogToAdd()" label="Ajouter"></button></div>
+                                        <div class="ui-grid-col-6 ">
+                                            <button type="button" pButton icon="fa-file-excel-o" style="float: right" (click)="showDialogImport()" label="Importer un fichier"></button>
+                                        </div>
+                                    </div>
+                                </p-footer>
+                            </p-dataTable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- / content -->
+
+
+<p-dialog header="Inscription d'un élève" [(visible)]="displayAddDialog" [responsive]="true" width="500" showEffect="fade"
+    [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="newInsc">
+        <form class="form form-validate floating-label" name="form" (ngSubmit)="f.form.valid && create(f);" #f="ngForm" novalidate>
+            <md-card>
+                <md-card-content>
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-4"><label>Elève:</label></div>
+                        <div class="ui-grid-col-7">
+                            <p-dropdown required name='eleve' [options]="eleves" [(ngModel)]="newInsc.eleve.id" [style]="{'width':'100%'}" filter="filter">
+                                <ng-template let-etab pTemplate="item">
+                                    <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                        <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </div>
+                        <div class="ui-grid-col-1"><button type="button" pButton icon="fa-plus" (click)="showDialogToAddEleve()"></button></div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-4"><label>Classe:</label></div>
+                        <div class="ui-grid-col-7">
+                            <p-dropdown required name='classe' [options]="classes" [(ngModel)]="newInsc.classe.id" [style]="{'width':'100%'}" filter="filter">
+                                <ng-template let-etab pTemplate="item">
+                                    <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                        <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-4"><label>Année académique:</label></div>
+                        <div class="ui-grid-col-7">
+                            <p-dropdown required name='annee' [options]="annees" [(ngModel)]="newInsc.annee.id" [style]="{'width':'100%'}" filter="filter">
+                                <ng-template let-etab pTemplate="item">
+                                    <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                        <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </div>
+                    </div>
+                </md-card-content>
+                <md-card-actions>
+                    <button md-raised-button (click)="cancel()">Annuler</button>
+                    <button md-raised-button color='primary' type="submit">Enregister</button>
+                </md-card-actions>
+            </md-card>
+        </form>
+    </div>
+</p-dialog>
+
+
+<p-dialog header="Modification d'un élève" [(visible)]="displayEditDialog" [responsive]="true" width="500" showEffect="fade"
+    [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selected">
+        <form class="form form-validate floating-label" name="form" (ngSubmit)="fe.form.valid && update();" #fe="ngForm" novalidate>
+            <md-card>
+                <md-card-content>
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-4"><label>Elève:</label></div>
+                        <div class="ui-grid-col-7">
+                            <p-dropdown required name='eleve' [options]="eleves" [(ngModel)]="selected.eleve.id" [style]="{'width':'100%'}" filter="filter">
+                                <ng-template let-etab pTemplate="item">
+                                    <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                        <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </div>
+                        <div class="ui-grid-col-1"><button type="button" pButton icon="fa-plus" (click)="showDialogToAddEleve()"></button></div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-4"><label>Classe:</label></div>
+                        <div class="ui-grid-col-7">
+                            <p-dropdown required name='classe' [options]="classes" [(ngModel)]="selected.classe.id" [style]="{'width':'100%'}" filter="filter">
+                                <ng-template let-etab pTemplate="item">
+                                    <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                        <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-4"><label>Année académique:</label></div>
+                        <div class="ui-grid-col-7">
+                            <p-dropdown required name='annee' [options]="annees" [(ngModel)]="selected.annee.id" [style]="{'width':'100%'}" filter="filter">
+                                <ng-template let-etab pTemplate="item">
+                                    <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                        <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </div>
+                    </div>
+                </md-card-content>
+                <md-card-actions>
+                    <button md-raised-button (click)="cancel()">Annuler</button>
+                    <button md-raised-button color='primary' type="submit">Modifier</button>
+                </md-card-actions>
+            </md-card>
+        </form>
+    </div>
+</p-dialog>
+
+<p-dialog header="Détails sur l'inscription un élève" [(visible)]="displayDetailDialog" [responsive]="true" width="500" showEffect="fade"
+    [modal]="true">
+    <div *ngIf="selected.eleve">
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label>Matricule:</label></div>
+            <div class="ui-grid-col-8"><label>{{selected.eleve.matricule}}</label></div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label>Nom:</label></div>
+            <div class="ui-grid-col-8"><label>{{selected.eleve.nom}}</label></div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label>Prénom:</label></div>
+            <div class="ui-grid-col-8"><label>{{selected.eleve.prenom}}</label></div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label>Date de naissance:</label></div>
+            <div class="ui-grid-col-8"><label>{{selected.eleve.dateNais}}</label></div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label>Lieu de naissance:</label></div>
+            <div class="ui-grid-col-8"><label>{{selected.eleve.lieuNais}}</label></div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label>Sexe:</label></div>
+            <div class="ui-grid-col-8"><label>{{selected.eleve.sexe}}</label></div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4"><label>Nom d'utilisateur:</label></div>
+            <div class="ui-grid-col-8"><label>{{selected.eleve.username}}</label></div>
+        </div>
+        <div class="ui-grid-row" *ngIf="selected.parent">
+            <div class="ui-grid-col-4"><label>Parent:</label></div>
+            <div class="ui-grid-col-8"><label>{{selected.eleve.parent.prenom}} {{selected.eleve.parent.nom}}</label></div>
+        </div>
+        <div class="ui-grid-row" *ngIf="selected.parent">
+            <div class="ui-grid-col-4"><label>Téléphone du parent:</label></div>
+            <div class="ui-grid-col-8"><label>{{selected.eleve.parent.telephone}}</label></div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                <button type="button" pButton icon="fa-close" (click)=" close()" label="Fermer"></button>
+            </div>
+        </p-footer>
+    </div>
+</p-dialog>
+
+
+
+<p-dialog header="Ajout d'un parent" [(visible)]="displayAddParentDialog" [responsive]="true" width="800" showEffect="fade"
+    [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="parent">
+        <form class="form form-validate floating-label" name="form" (ngSubmit)="f.form.valid && createParent(f);" #f="ngForm" novalidate>
+            <div class="ui-g">
+                <div class="ui-g-6">
+                    <p-panel header="Informations de base">
+                        <md-card>
+                            <md-card-content>
+                                <md-input-container style="width:100%">
+                                    <input mdInput placeholder="Nom" name="nom" [(ngModel)]="parent.nom" required>
+                                    <md-error>Le nom est obligatoire</md-error>
+                                </md-input-container>
+
+                                <md-input-container style="width:100%">
+                                    <input mdInput placeholder="Prénom" name="prenom" [(ngModel)]="parent.prenom">
+                                </md-input-container>
+
+                                <div class="ui-grid-row">
+                                    <div class="ui-grid-col-4"><label>Date nais.:</label></div>
+                                    <div class="ui-grid-col-8">
+                                        <p-calendar placeholder="jour-mois-année" name='datenais' [(ngModel)]="parent.dateNais" dateFormat="dd-mm-yy"></p-calendar>
+                                    </div>
+                                </div>
+
+                                <md-input-container style="width:100%">
+                                    <input mdInput placeholder="Lieu de naissance" name="lieuNais" [(ngModel)]="parent.lieuNais" required>
+                                    <md-error>Le lieu de naissance est obligatoire</md-error>
+                                </md-input-container>
+
+                                <div class="ui-grid-row">
+                                    <div class="ui-grid-col-4"><label>Sexe:</label></div>
+                                    <div class="ui-grid-col-8">
+                                        <md-radio-group color="primary" placeholder="Sexe" name="sexe" [(ngModel)]="parent.sexe" required>
+                                            <md-radio-button value="feminin">Féminin</md-radio-button>
+                                            <md-radio-button value="masculin">Masculin</md-radio-button>
+                                            <md-radio-button value="autre">Autre</md-radio-button>
+                                        </md-radio-group>
+                                    </div>
+                                </div>
+
+                            </md-card-content>
+                        </md-card>
+                    </p-panel>
+                </div>
+                <div class="ui-g-6">
+                    <p-panel header="Informations supplémentaires">
+                        <md-card>
+                            <md-card-content>
+                                <md-input-container style="width:100%">
+                                    <input mdInput placeholder="Nom d'utlisateur" name="username" [(ngModel)]="parent.username" required>
+                                    <md-error>Le nom d'utilisateur est obligatoire</md-error>
+                                </md-input-container>
+
+                                <md-input-container style="width:100%">
+                                    <input mdInput placeholder="Téléphone" name="tel" [(ngModel)]="parent.telephone">
+                                </md-input-container>
+
+
+                                <md-input-container style="width:100%">
+                                    <input mdInput placeholder="Email" [formControl]="emailFormControl" name="email" [(ngModel)]="parent.email">
+                                    <md-error *ngIf="emailFormControl.hasError('required')">
+                                        L'adresse email est obligatoire
+                                    </md-error>
+                                    <md-error *ngIf="emailFormControl.hasError('pattern')">
+                                        Veuillez enter une adresse email valide
+                                    </md-error>
+                                </md-input-container>
+
+                                <md-input-container style="width:100%">
+                                    <input mdInput placeholder="Adresse" name="adresse" [(ngModel)]="parent.adresse">
+                                </md-input-container>
+
+                                <md-input-container style="width:100%">
+                                    <input mdInput placeholder="Profession" name="profession" [(ngModel)]="parent.profession">
+                                </md-input-container>
+
+                                <md-checkbox [(ngModel)]="parent.handicape" name="handicap" color="primary">
+                                    Handicapé ?
+                                </md-checkbox>
+                            </md-card-content>
+                            <md-card-actions>
+                                <button md-raised-button (click)="cancelParent()">Annuler</button>
+                                <button md-raised-button color='primary' type="submit">Enregister</button>
+                            </md-card-actions>
+                        </md-card>
+                    </p-panel>
+                </div>
+            </div>
+        </form>
+    </div>
+</p-dialog>
+
+
+
+<p-dialog header="Ajout d'un élève" [(visible)]="displayAddEleveDialog" [responsive]="true" width="800" showEffect="fade"
+    [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="eleve">
+        <form class="form form-validate floating-label" name="form" (ngSubmit)="f.form.valid && createEleve(f);" #f="ngForm" novalidate>
+            <div class="ui-g">
+                <div class="ui-g-6">
+                    <p-panel header="Informations de base">
+                        <md-card>
+                            <md-card-content>
+                                <div class="ui-grid-row">
+                                    <div class="ui-grid-col-3"><label>Parent:</label></div>
+                                    <div class="ui-grid-col-8">
+                                        <p-dropdown required name='parent' [options]="parents" [(ngModel)]="eleve.parent.id" [style]="{'width':'100%'}" filter="filter">
+                                            <ng-template let-etab pTemplate="item">
+                                                <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                                    <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                                </div>
+                                            </ng-template>
+                                        </p-dropdown>
+                                    </div>
+                                    <div class="ui-grid-col-1"><button type="button" pButton icon="fa-plus" (click)="showDialogToAddParent()"></button></div>
+                                </div>
+
+                                <md-input-container style="width:100%">
+                                    <input mdInput placeholder="Nom" name="nom" [(ngModel)]="eleve.nom" required>
+                                    <md-error>Le nom est obligatoire</md-error>
+                                </md-input-container>
+
+                                <md-input-container style="width:100%">
+                                    <input mdInput placeholder="Prénom" name="prenom" [(ngModel)]="eleve.prenom">
+                                </md-input-container>
+
+                                <div class="ui-grid-row">
+                                    <div class="ui-grid-col-4"><label>Date nais.:</label></div>
+                                    <div class="ui-grid-col-8">
+                                        <p-calendar placeholder="jour-mois-année" name='datenais' [(ngModel)]="eleve.dateNais" dateFormat="dd-mm-yy"></p-calendar>
+                                    </div>
+                                </div>
+
+                                <md-input-container style="width:100%">
+                                    <input mdInput placeholder="Lieu de naissance" name="lieuNais" [(ngModel)]="eleve.lieuNais" required>
+                                    <md-error>Le lieu de naissance est obligatoire</md-error>
+                                </md-input-container>
+
+                                <div class="ui-grid-row">
+                                    <div class="ui-grid-col-4"><label>Sexe:</label></div>
+                                    <div class="ui-grid-col-8">
+                                        <md-radio-group color="primary" placeholder="Sexe" name="sexe" [(ngModel)]="eleve.sexe" required>
+                                            <md-radio-button value="feminin">Féminin</md-radio-button>
+                                            <md-radio-button value="masculin">Masculin</md-radio-button>
+                                            <md-radio-button value="autre">Autre</md-radio-button>
+                                        </md-radio-group>
+                                    </div>
+                                </div>
+
+                            </md-card-content>
+                        </md-card>
+                    </p-panel>
+                </div>
+                <div class="ui-g-6">
+                    <p-panel header="Informations supplémentaires">
+                        <md-card>
+                            <md-card-content>
+                                <md-input-container style="width:100%">
+                                    <input mdInput placeholder="Nom d'utlisateur" name="username" [(ngModel)]="eleve.username" required>
+                                    <md-error>Le nom d'utilisateur est obligatoire</md-error>
+                                </md-input-container>
+
+
+
+                                <md-input-container style="width:100%">
+                                    <input mdInput placeholder="Adresse" name="adresse" [(ngModel)]="eleve.adresse">
+                                </md-input-container>
+
+                                <md-checkbox [(ngModel)]="eleve.handicape" name="handicap" color="primary">
+                                    Handicapé ?
+                                </md-checkbox>
+
+
+                            </md-card-content>
+                            <md-card-actions>
+                                <button md-raised-button (click)="cancelEleve()">Annuler</button>
+                                <button md-raised-button color='primary' type="submit">Enregister</button>
+                            </md-card-actions>
+                        </md-card>
+                    </p-panel>
+                </div>
+            </div>
+        </form>
+    </div>
+</p-dialog>
+
+
+<p-dialog header="Importation des élèves" [(visible)]="displayImportDialog" [responsive]="true" width="500" showEffect="fade"
+    [modal]="true">
+    <form #f="ngForm" novalidate>
+        <div class="ui-grid ui-grid-responsive ui-fluid">
+            <md-card>
+                <md-card-content>
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-4"><label>Section:</label></div>
+                        <div class="ui-grid-col-8">
+                            <p-dropdown (onChange)="onChange($event)" required name='section' [options]="sections" [(ngModel)]="sectionId" [style]="{'width':'100%'}"
+                                filter="filter">
+                                <ng-template let-etab pTemplate="item">
+                                    <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                        <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-4"><label>Classe:</label></div>
+                        <div class="ui-grid-col-8">
+                            <p-dropdown required name='classe' [options]="classes" [(ngModel)]="newInsc.classe.id" [style]="{'width':'100%'}" filter="filter">
+                                <ng-template let-etab pTemplate="item">
+                                    <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                        <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </div>
+                    </div>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-4"><label>Année académique:</label></div>
+                        <div class="ui-grid-col-8">
+                            <p-dropdown required name='annee' [options]="annees" [(ngModel)]="newInsc.annee.id" [style]="{'width':'100%'}" filter="filter">
+                                <ng-template let-etab pTemplate="item">
+                                    <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                        <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </div>
+                    </div>
+                </md-card-content>
+            </md-card>
+        </div>
+        <p-fileUpload [disabled]="!f.valid" chooseLabel='Choisir' uploadLabel='Charger' cancelLabel='Annuler' name="fichier[]"
+            url="{{getUploadUrl()}}" (onBeforeSend)="onBeforeSend($event)" (onError)="onError($event)" (onUpload)="onUpload($event)"
+            accept=".xls" maxFileSize="1000000">
+        </p-fileUpload>
+    </form>
+</p-dialog>

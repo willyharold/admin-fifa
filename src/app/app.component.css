@@ -1,0 +1,26 @@
+/***************** mon ajout *****************************************************/
+/***************** changer les colorations du radio-button ***********************/	
+/* change la couleur du cercle du bouton radio */
+/deep/ .mat-radio-outer-circle {
+	border-color: #2196f3;
+}
+
+/* change la couleur du cercle du bouton radio lorsqu'on click */
+/deep/ .mat-radio-checked .mat-radio-outer-circle {
+    border-color: #2196f3;
+}
+
+/* change la couleur du cercle lorsqu'il est sous l'état inactif ou en anglais disable */
+/deep/ .mat-radio-disabled .mat-radio-outer-circle {
+    border-color: #2196f3;
+}
+
+/* change la couleur du point qui se trouve dans le cercle du bouton radio */
+/deep/ .mat-radio-inner-circle {
+    background-color: #2196f3;
+}
+
+/* change la couleur de l'effet circulaire qui s'affiche autour du bouton radio lorsqu'on click */
+/deep/ .mat-radio-ripple .mat-ripple-element {
+	background-color: rgba(33, 150, 243, 0.3);
+}

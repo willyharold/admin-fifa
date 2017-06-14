@@ -1,0 +1,417 @@
+<div class="box">
+    <!-- Content Navbar -->
+    <div class="navbar md-whiteframe-z1 no-radius blue">
+        <!-- Open side - Naviation on mobile -->
+        <a md-ink-ripple data-toggle="modal" data-target="#aside" class="navbar-item pull-left visible-xs visible-sm"><i class="mdi-navigation-menu i-24"></i></a>
+        <!-- / -->
+        <!-- Page title - Bind to $state's title -->
+        <div class="navbar-item pull-left h4">Récaputilatif</div>
+        <!-- / -->
+        <!-- Common tools -->
+        <ul class="nav nav-sm navbar-tool pull-right">
+            <li>
+                <a md-ink-ripple ui-toggle-class="show" target="#search">
+                    <i class="mdi-action-search i-24"></i>
+                </a>
+            </li>
+            
+        </ul>
+        <div class="pull-right" ui-view="navbar@"></div>
+        <!-- / -->
+        <!-- Search form -->
+        <div id="search" class="pos-abt w-full h-full blue hide">
+            <div class="box">
+                <div class="box-col w-56 text-center">
+                    <!-- hide search form -->
+                    <a md-ink-ripple class="navbar-item inline" ui-toggle-class="show" target="#search"><i class="mdi-navigation-arrow-back i-24"></i></a>
+                </div>
+                <div class="box-col v-m">
+                    <!-- bind to app.search.content -->
+                    <input class="form-control input-lg no-bg no-border" placeholder="Rechercher" ng-model="app.search.content">
+                </div>
+                
+            </div>
+        </div>
+        <!-- / -->
+    </div>
+    <!-- Content -->
+
+    <div class="box-row">
+        <div class="box-cell">
+            <div class="box-inner padding">
+
+
+                <div class="row row-xs">
+                    <div class="col-sm-4">
+                        <div class="panel panel-card p m-b-sm">
+                            <h5 class="no-margin m-b">Tasks</h5>
+                            <div class="text-center">
+                                <div class="inline">
+                                    <div ui-jp="easyPieChart" ui-options="{
+                percent: 25,
+                lineWidth: 12,
+                trackColor: '#f1f2f3',
+                barColor: '#4caf50',
+                scaleColor: '#fff',
+                size: 167,
+                lineCap: 'butt',
+                color: '',
+                animate: 3000,
+                rotate: 270
+              }" ng-init="color = getColor(app.setting.theme.primary, 400)">
+                                        <div class="font-bold text-warning">
+                                            25%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div><strong>5</strong> remainning</div>
+                                <small class="text-muted">Next task: 19:30 Thu</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel panel-card p m-b-sm">
+                            <h5 class="no-margin m-b">Todos</h5>
+                            <div class="text-center">
+                                <div class="inline">
+                                    <div ui-jp="easyPieChart" ui-options="{
+                percent: 50,
+                lineWidth: 70,
+                trackColor: '#fff',
+                barColor: '#f1f2f3',
+                scaleColor: '#fff',
+                size: 167,
+                lineCap: 'butt',
+                rotate: 90,
+                animate: 5000
+              }">
+                                        <div class="font-bold h3 text-accent">
+                                            50%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div><strong>32</strong> not finished</div>
+                                <small class="text-muted">432 task finished</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel panel-card p m-b-sm">
+                            <h5 class="no-margin m-b">Sells</h5>
+                            <div class="text-center" ng-controller="ChartCtrl">
+                                <div ui-jp="plot" ui-options="
+              [{label:'Series 1', data: 45}, {label:'Series 2', data: 5}, {label:'Series 3', data: 30}, {label:'Series 4', data: 20}],
+              {
+                series: { pie: { show: true, innerRadius: 0.4, stroke: { width: 3 }, label: { show: true, threshold: 0.05 } } },
+                colors: ['#2196f3','#ffc107','#4caf50','#7e57c2'],
+                grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },   
+                tooltip: true,
+                tooltipOpts: { content: '%s: %p.0%' }
+              }
+            " style="height:168px"></div>
+                            </div>
+                            <div class="m-t-xs">
+                                <div class="font-bold">$432,000</div>
+                                <small class="text-muted">This month</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-xs" ng-controller="ChartCtrl">
+                    <div class="col-sm-4">
+                        <div class="panel panel-card">
+                            <div class="p">
+                                Members
+                            </div>
+                            <div class="panel-body text-center">
+                                <div class="m-v-lg">
+                                    Total accounts
+                                    <div class="h2 text-success font-bold">3,421,100</div>
+                                </div>
+                            </div>
+                            <div class="b-t b-light p">
+                                Composite
+                                <div class="progress progress-striped progress-sm r m-v-sm">
+                                    <div class="progress-bar green" style="width:30%">30%</div>
+                                    <div class="progress-bar amber" style="width:20%">20%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel panel-card">
+                            <div class="p">
+                                <label class="md-switch pull-right" ng-init="showData=false">
+            <input type="checkbox" ng-model="showData">
+            <i class="green"></i>
+          </label>
+                                <span>Monitor</span> <i class="fa fa-caret-up text-success"></i><span class="text-xs text-muted m-l-xs">1.5%</span>
+                            </div>
+                            <div class="panel-body">
+                                <div ui-jp="plot" ui-refresh="showData" ui-options="
+            [
+              {
+                data: [[1, 7.5], [2, 7.5], [3, 5.7], [4, 8.9], [5, 10], [6, 7], [7, 9], [8, 13], [9, 7], [10, 6]], 
+                points: { show: true, radius: 4, lineWidth: 3, fillColor: '#7e57c2'}, 
+                lines:  { show: true, lineWidth: 0, fill: 0.5, fillColor: '#7e57c2' }, 
+                color:'#fff'
+              }
+            ],
+            {
+              series: { shadowSize: 0 },
+              xaxis: { show: true, font: { color: '#ccc' }, position: 'bottom' },
+              yaxis:{ show: true, font: { color: '#ccc' }},
+              grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },
+              tooltip: true,
+              tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+            }
+          " style="height:198px">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel panel-card">
+                            <div class="p">
+                                Total revenue of this month
+                            </div>
+                            <div style="overflow-x: hidden">
+                                <div style="margin: 0 -4px;">
+                                    <div ui-jp="plot" ui-options="
+              [
+                { data: [[1, 9.5], [2, 9.4], [3, 9.5], [4, 9.5], [5, 9.7], [6, 9.6], [7, 9.3], [8, 9.5], [9, 9], [10, 9.9]], points: { show: true, radius: 0}, splines: { show: true, tension: 0.45, lineWidth: 1, fill: 0.2 } },
+                { data: [[1, 4.5], [2, 4.2], [3, 4.5], [4, 4.3], [5, 4.5], [6, 4.7], [7, 4.6], [8, 4.8], [9, 4.6], [10, 4.5]], points: { show: true, radius: 0}, splines: { show: true, tension: 0.45, lineWidth: 1, fill: 1 } }
+              ], 
+              {
+                colors: ['#cccccc', '#475069'],
+                series: { shadowSize: 3 },
+                xaxis: { show: false, font: { color: '#ccc' }, position: 'bottom' },
+                yaxis:{ show: false, font: { color: '#ccc' }},
+                grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },
+                tooltip: true,
+                tooltipOpts: { content: '%x.0 is %y.4',  defaultTheme: false, shifts: { x: 0, y: -40 } }
+              }
+            " style="height:173px">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer bg-dark no-b-t">
+                                <div class="box">
+                                    <div class="box-col">
+                                        <span class="text-md">$30,343 <i class="fa fa-caret-up text-muted"></i></span>
+                                    </div>
+                                    <div class="box-col text-right w-xs">
+                                        <div ng-init="data1=[60,40]" ui-jp="sparkline" ui-options="[ 16,15,15,14,17,18,16,15,16 ], {type:'pie', height:25, sliceColors:['#ffc107','#fff']}"
+                                            class="sparkline inline"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-xs" ng-controller="VectorMapCtrl">
+                    <div class="col-md-8">
+                        <div class="panel panel-card">
+                            <div class="panel-heading b-b b-light">World Market</div>
+                            <div class="panel-body">
+                                <p class="m-b-lg text-muted">World map, world regions, countries and cities.</p>
+                                <div class="m-b-lg" style="height:243px;" ui-jp="vectorMap" ui-options="{            
+            map: 'world_mill_en',
+            markers: [{latLng: [41.90, 12.45], name: 'Vatican City'}, {latLng: [43.93, 12.46], name: 'San Marino'}, {latLng: [47.14, 9.52], name: 'Liechtenstein'}, {latLng: [7.11, 171.06], name: 'Marshall Islands'}, {latLng: [17.3, -62.73], name: 'Saint Kitts and Nevis'}, {latLng: [3.2, 73.22], name: 'Maldives'}, {latLng: [35.88, 14.5], name: 'Malta'}, {latLng: [12.05, -61.75], name: 'Grenada'}, {latLng: [13.16, -61.23], name: 'Saint Vincent and the Grenadines'}, {latLng: [13.16, -59.55], name: 'Barbados'}, {latLng: [17.11, -61.85], name: 'Antigua and Barbuda'}, {latLng: [-4.61, 55.45], name: 'Seychelles'}, {latLng: [7.35, 134.46], name: 'Palau'}, {latLng: [42.5, 1.51], name: 'Andorra'} ],
+            normalizeFunction: 'polynomial',
+            backgroundColor: '#fff',
+            regionsSelectable: true,
+            markersSelectable: true,
+            regionStyle: {
+              initial: {
+                fill: '#f1f2f3'
+              },
+              hover: {
+                fill: '#2196f3',
+                stroke: '#fff'
+              },
+            },
+            markerStyle: {
+              initial: {
+                fill: '#2196f3',
+                stroke: '#fff'
+              },
+              hover: {
+                fill: '#3f51b5',
+                stroke: '#fff'
+              }
+            },
+            series: {
+              markers: [{
+                attribute: 'fill',
+                scale: ['#3f51b5','#7e57c2', '#4caf50'],
+                values: [605.16, 310.69, 405.17, 248.31, 207.35, 217.22, 137.70, 280.71, 210.32, 325.42]
+              },{
+                attribute: 'r',
+                scale: [5, 20],
+                values: [605.16, 310.69, 405.17, 248.31, 207.35, 217.22, 137.70, 280.71, 210.32, 325.42]
+              }]
+            }
+          }">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel panel-card">
+                            <div class="panel-heading b-b b-light">Infomation</div>
+                            <div class="list-group no-border no-radius">
+                                <div class="list-group-item">
+                                    <span class="pull-right">293,200</span>
+                                    <i class="fa fa-fw fa-circle m-r-sm text-info"></i> Vatican City
+                                </div>
+                                <div class="list-group-item">
+                                    <span class="pull-right">203,000</span>
+                                    <i class="fa fa-fw fa-circle m-r-sm text-success"></i> San Marino
+                                </div>
+                                <div class="list-group-item">
+                                    <span class="pull-right">180,230</span>
+                                    <i class="fa fa-fw fa-circle m-r-sm text-accent"></i> Marshall Islands
+                                </div>
+                                <div class="list-group-item">
+                                    <span class="pull-right">130,100</span>
+                                    <i class="fa fa-fw fa-circle m-r-sm text-accent-lt"></i> Maldives
+                                </div>
+                                <div class="list-group-item">
+                                    <span class="pull-right">98,000</span>
+                                    <i class="fa fa-fw fa-circle m-r-sm text-primary"></i> Palau
+                                </div>
+                                <div class="list-group-item">
+                                    <span class="pull-right">130,100</span>
+                                    <i class="fa fa-fw fa-circle m-r-sm text-muted-lt"></i> Maldives
+                                </div>
+                                <div class="list-group-item">
+                                    <span class="pull-right">98,000</span>
+                                    <i class="fa fa-fw fa-circle m-r-sm text-muted-lt"></i> Palau
+                                </div>
+                                <div class="list-group-item">
+                                    <span class="pull-right">130,100</span>
+                                    <i class="fa fa-fw fa-circle m-r-sm text-muted-lt"></i> Maldives
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-xs">
+                    <div class="col-sm-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <span class="label bg-danger pull-right m-t-xs">4 left</span> Tasks
+                            </div>
+                            <table class="table table-striped m-b-none">
+                                <thead>
+                                    <tr>
+                                        <th>Progress</th>
+                                        <th>Item</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="progress progress-sm progress-striped active no-margin m-v-xs">
+                                                <div class="progress-bar bg-success" data-toggle="tooltip" data-original-title="80%" style="width: 80%"></div>
+                                            </div>
+                                        </td>
+                                        <td>App prototype design</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="progress progress-sm no-margin m-v-xs">
+                                                <div class="progress-bar bg-info" data-toggle="tooltip" data-original-title="40%" style="width: 40%"></div>
+                                            </div>
+                                        </td>
+                                        <td>Design documents</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="progress progress-sm no-margin m-v-xs">
+                                                <div class="progress-bar bg-warning" data-toggle="tooltip" data-original-title="20%" style="width: 20%"></div>
+                                            </div>
+                                        </td>
+                                        <td>UI toolkit</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="progress progress-sm no-margin m-v-xs">
+                                                <div class="progress-bar bg-danger" data-toggle="tooltip" data-original-title="15%" style="width: 15%"></div>
+                                            </div>
+                                        </td>
+                                        <td>Testing</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Stats</div>
+                            <table class="table table-striped m-b-none">
+                                <thead>
+                                    <tr>
+                                        <th style="width:60px;" class="text-center">Graph</th>
+                                        <th>Item</th>
+                                        <th style="width:90px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div ng-init="data1=[ 16,15,15,14,17,18,16,15,16 ]" ui-jp="sparkline" ui-options="[ 16,15,15,14,17,18,16,15,16 ], {type:'bar', height:19, barWidth:4, barSpacing:2, barColor:'#4caf50'}"
+                                                class="sparkline inline">loading...</div>
+                                        </td>
+                                        <td>App downloads</td>
+                                        <td class="text-success">
+                                            <i class="fa fa-level-up"></i> 40%
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center">
+                                            <div ng-init="data2=[ 60,30,10 ]" ui-jp="sparkline" ui-options="[ 60,30,10 ], {type:'pie', height:19, sliceColors:['#2196f3','#fff','#ffc107']}"
+                                                class="sparkline inline">loading...</div>
+                                        </td>
+                                        <td>Social connection</td>
+                                        <td class="text-success">
+                                            <i class="fa fa-level-up"></i> 20%
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div ng-init="data3=[ 16,15,15,14,17,18,16,15,16 ]" ui-jp="sparkline" ui-options="[ 16,15,15,14,17,18,16,15,16 ], {type:'line', height:19, width:60, lineColor:'#3f51b5', fillColor:'#fff'}"
+                                                class="sparkline inline">loading...</div>
+                                        </td>
+                                        <td>Revenue</td>
+                                        <td class="text-warning">
+                                            <i class="fa fa-level-down"></i> 5%
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div ng-init="data4=[ 16,15,15,14,17,18,16,15,16 ]" ui-jp="sparkline" ui-options="[ 16,15,15,14,17,18,16,15,16 ], {type:'discrete', height:19, width:60, lineColor:'#4caf50'}"
+                                                class="sparkline inline">loading...</div>
+                                        </td>
+                                        <td>Customer increase</td>
+                                        <td class="text-danger">
+                                            <i class="fa fa-level-down"></i> 20%
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>

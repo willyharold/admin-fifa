@@ -1,0 +1,235 @@
+<!-- content -->
+<div id="content" class="app-content" role="main">
+    <div class="box">
+        <!-- Content Navbar -->
+        <div class="navbar md-whiteframe-z1 no-radius blue">
+            <!-- Open side - Naviation on mobile -->
+            <a md-ink-ripple data-toggle="modal" data-target="#aside" class="navbar-item pull-left visible-xs visible-sm"><i class="mdi-navigation-menu i-24"></i></a>
+
+            <!-- Page title - Bind to $state's title -->
+            <div class="navbar-item pull-left h4">Etablissement</div>
+
+            <!-- / -->
+            <!-- Common tools -->
+            <ul class="nav nav-sm navbar-tool pull-right">
+                <li>
+                    <a md-ink-ripple ui-toggle-class="show" target="#search">
+                        <i class="mdi-action-search i-24"></i>
+                    </a>
+                </li>
+            </ul>
+            <div class="pull-right" ui-view="navbar@"></div>
+            <!-- / -->
+            <!-- Search form -->
+            <div id="search" class="pos-abt w-full h-full blue hide">
+                <div class="box">
+                    <div class="box-col w-56 text-center">
+                        <!-- hide search form -->
+                        <a md-ink-ripple class="navbar-item inline" ui-toggle-class="show" target="#search"><i class="mdi-navigation-arrow-back i-24"></i></a>
+                    </div>
+                    <div class="box-col v-m">
+                        <!-- bind to app.search.content -->
+                        <input class="form-control input-lg no-bg no-border" placeholder="Rechercher" ng-model="app.search.content">
+                    </div>
+                    <div class="box-col w-56 text-center">
+                        <a md-ink-ripple class="navbar-item inline"></a>
+                    </div>
+                </div>
+            </div>
+            <!-- / -->
+        </div>
+        <!-- Content -->
+
+        <div class="box-row">
+            <div class="box-cell">
+                <div class="box-inner padding">
+
+
+                    <div class="panel panel-default">
+                        <div class="table-responsive">
+                            <p-dataTable emptyMessage="Aucun élément à afficher." [(selection)]="selectedEtablissement" class="table table-striped no-margin" selectionMode="single" dataKey="id"
+                                [value]="etabs" [rows]="10" [paginator]="true" #dt>
+                                <p-header>Liste des établissements</p-header>
+                                <p-column header="No" [style]="{'width':'5%'}">
+                                    <ng-template let-ri="rowIndex" pTemplate="body">
+                                        {{ri+1}}
+                                    </ng-template>
+                                </p-column>
+                                <p-column field="nom" header="Nom" [sortable]="true" [filter]="true" filterPlaceholder="Rechercher"></p-column>
+                                <p-column field="sigle" header="Sigle" [sortable]="true" [filter]="true" filterPlaceholder="Rechercher"></p-column>
+                                <p-column field="pays" header="Pays"></p-column>
+                                <p-column [style]="{'width':'33%'}" styleClass="col-button">
+                                    <ng-template pTemplate="header">
+                                        Actions
+                                    </ng-template>
+                                       <ng-template let-selected="rowData" pTemplate="body">
+                                        <button class="ui-button-info" type="button" pButton (click)="showDialogDetails(selected)" icon="fa-eye" label="Détails"></button>
+                                        <button type="button" pButton (click)="showDialogToEdit(selected)" icon="fa-edit" label="Modifier"></button>
+                                        <button class="ui-button-danger"  type="button" pButton (click)="delete(selected)" icon="fa-trash-o" label="Supprimer"></button>
+                                    </ng-template>
+                             
+                                </p-column>
+                                <p-footer>
+                                    <div class="ui-helper-clearfix" style="width:100%"><button type="button" pButton icon="fa-plus" style="float:left" (click)="showDialogToAdd()"
+                                            label="Ajouter"></button></div>
+                                </p-footer>
+                            </p-dataTable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- / content -->
+
+
+<p-dialog header="Ajout d'un établissement" [(visible)]="displayAddDialog" [responsive]="true" width="500" showEffect="fade"
+    [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="newEtab">
+        <form class="form form-validate floating-label" name="form" (ngSubmit)="f.form.valid && create(f);" #f="ngForm" novalidate>
+            <md-card>
+                <md-card-content>
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Nom" name="nom" [(ngModel)]="newEtab.nom" required>
+                        <md-error>Le nom est obligatoire</md-error>
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Sigle" name="sigle" [(ngModel)]="newEtab.sigle" required>
+                        <md-error>Le sigle est obligatoire</md-error>
+                        <md-hint align="end">ex: SYGE</md-hint>
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Devise" name="devise" [(ngModel)]="newEtab.devise" required>
+                        <md-error>La dévise est obligatoire</md-error>
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Téléphone" name="telephone" [(ngModel)]="newEtab.telephone" required>
+                        <md-error>Le numéro de téléphone est obligatoire</md-error>
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Email" [formControl]="emailFormControl" name="email" [(ngModel)]="newEtab.email">
+                        <md-error *ngIf="emailFormControl.hasError('required')">
+                            L'adresse email est obligatoire
+                        </md-error>
+                        <md-error *ngIf="emailFormControl.hasError('pattern')">
+                            Veuillez enter une adresse email valide
+                        </md-error>
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Pays" name="pays" [(ngModel)]="newEtab.pays" required>
+                        <md-error>Le pays est obligatoire</md-error>
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Ville" name="ville" [(ngModel)]="newEtab.ville" required>
+                        <md-error>La ville est obligatoire</md-error>
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Boite postale" name="bp" [(ngModel)]="newEtab.bp" required>
+                        <md-error>La boite postale est obligatoire</md-error>
+                    </md-input-container>
+
+                </md-card-content>
+                <!--end .card-body -->
+                <md-card-actions>
+                    <button md-raised-button (click)="cancel()">Annuler</button>
+                    <button md-raised-button color='primary' type="submit">Enregister</button>
+                </md-card-actions>
+                <!--end .card-actionbar -->
+            </md-card>
+        </form>
+    </div>
+</p-dialog>
+
+
+<p-dialog header="Modification d'un établissement" [(visible)]="displayEditDialog" [responsive]="true" width="500" showEffect="fade"
+    [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selected">
+        <form class="form form-validate floating-label" name="form" (ngSubmit)="fe.form.valid && update()" #fe="ngForm" novalidate>
+            <md-card>
+                <md-card-content>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Nom" name="nom" [(ngModel)]="selected.nom" required>
+                        <md-error>Le nom est obligatoire</md-error>
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Sigle" name="sigle" [(ngModel)]="selected.sigle" required>
+                        <md-error>Le sigle est obligatoire</md-error>
+                        <md-hint align="end">ex: SYGE</md-hint>
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Devise" name="devise" [(ngModel)]="selected.devise" required>
+                        <md-error>La dévise est obligatoire</md-error>
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Téléphone" name="telephone" [(ngModel)]="selected.telephone" required>
+                        <md-error>Le numéro de téléphone est obligatoire</md-error>
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Email" [formControl]="emailFormControl" name="email" [(ngModel)]="selected.email">
+                        <md-error *ngIf="emailFormControl.hasError('required')">
+                            L'adresse email est obligatoire
+                        </md-error>
+                        <md-error *ngIf="emailFormControl.hasError('pattern')">
+                            Veuillez enter une adresse email valide
+                        </md-error>
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Pays" name="pays" [(ngModel)]="selected.pays" required>
+                        <md-error>Le pays est obligatoire</md-error>
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Ville" name="ville" [(ngModel)]="selected.ville" required>
+                        <md-error>La ville est obligatoire</md-error>
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Boite postale" name="bp" [(ngModel)]="selected.bp" required>
+                        <md-error>La boite postale est obligatoire</md-error>
+                    </md-input-container>
+
+                </md-card-content>
+                <!--end .card-body -->
+                <md-card-actions>
+                    <button md-raised-button (click)=" cancel()">Annuler</button>
+                    <button md-raised-button color='primary' type="submit">Modifier</button>
+                </md-card-actions>
+                <!--end .card-actionbar -->
+            </md-card>
+        </form>
+    </div>
+</p-dialog>
+
+<p-dialog header="Détails sur un établissement" [(visible)]="displayDetailDialog" [responsive]="true" width="500" showEffect="fade"
+    [modal]="true">
+    <md-list>
+        <md-list-item> Nom: {{selected.nom}} </md-list-item>
+        <md-list-item> Sigle: {{selected.sigle}} </md-list-item>
+        <md-list-item> Devise: {{selected.devise}} </md-list-item>
+        <md-list-item> Telephone: {{selected.telephone}} </md-list-item>
+        <md-list-item> Email: {{selected.email}} </md-list-item>
+        <md-list-item> Pays: {{selected.pays}} </md-list-item>
+        <md-list-item> Ville: {{selected.ville}} </md-list-item>
+        <md-list-item> B.P.: {{selected.bp}} </md-list-item>
+    </md-list>
+
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <button type="button" pButton icon="fa-close" (click)=" close()" label="Fermer"></button>
+        </div>
+    </p-footer>
+</p-dialog>

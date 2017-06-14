@@ -1,0 +1,161 @@
+<!-- content -->
+<div id="content" class="app-content" role="main">
+    <div class="box">
+        <!-- Content Navbar -->
+        <div class="navbar md-whiteframe-z1 no-radius blue">
+            <!-- Open side - Naviation on mobile -->
+            <a md-ink-ripple data-toggle="modal" data-target="#aside" class="navbar-item pull-left visible-xs visible-sm"><i class="mdi-navigation-menu i-24"></i></a>
+
+            <!-- Page title - Bind to $state's title -->
+            <div class="navbar-item pull-left h4">Charge</div>
+
+            <!-- / -->
+            <!-- Common tools -->
+            <ul class="nav nav-sm navbar-tool pull-right">
+                <li>
+                    <a md-ink-ripple ui-toggle-class="show" target="#search">
+                        <i class="mdi-action-search i-24"></i>
+                    </a>
+                </li>
+            </ul>
+            <div class="pull-right" ui-view="navbar@"></div>
+            <!-- / -->
+            <!-- Search form -->
+            <div id="search" class="pos-abt w-full h-full blue hide">
+                <div class="box">
+                    <div class="box-col w-56 text-center">
+                        <!-- hide search form -->
+                        <a md-ink-ripple class="navbar-item inline" ui-toggle-class="show" target="#search"><i class="mdi-navigation-arrow-back i-24"></i></a>
+                    </div>
+                    <div class="box-col v-m">
+                        <!-- bind to app.search.content -->
+                        <input class="form-control input-lg no-bg no-border" placeholder="Rechercher" ng-model="app.search.content">
+                    </div>
+                    <div class="box-col w-56 text-center">
+                        <a md-ink-ripple class="navbar-item inline"></a>
+                    </div>
+                </div>
+            </div>
+            <!-- / -->
+        </div>
+        <!-- Content -->
+
+        <div class="box-row">
+            <div class="box-cell">
+                <div class="box-inner padding">
+
+
+                    <div class="panel panel-default">
+                        <div class="table-responsive">
+                            <p-dataTable emptyMessage="Aucun élément à afficher." [(selection)]="selectedCharge" class="table table-striped no-margin"
+                                selectionMode="single" dataKey="id" [value]="charges" [rows]="10" [paginator]="true" #dt>
+                                <p-header>Liste des charges</p-header>
+                                <p-column header="No" [style]="{'width':'5%'}">
+                                    <ng-template let-ri="rowIndex" pTemplate="body">
+                                        {{ri+1}}
+                                    </ng-template>
+                                </p-column>
+                                <p-column field="recompense1" header="Recompense no 1" [sortable]="true" [filter]="true" filterPlaceholder="Rechercher"></p-column>
+                                <p-column field="recompense2" header="Recompense no 2" [sortable]="true" [filter]="true" filterPlaceholder="Rechercher"></p-column>
+                                <p-column field="recompense3" header="Recompense no 3"></p-column>
+
+                                <p-column [style]="{'width':'33%'}" styleClass="col-button">
+                                    <ng-template pTemplate="header">
+                                        Actions
+                                    </ng-template>
+                                    <ng-template let-selected="rowData" pTemplate="body">
+                                        <button class="ui-button-info" type="button" pButton (click)="showDialogDetails(selected)" icon="fa-eye" label="Détails"></button>
+                                        <button type="button" pButton (click)="showDialogToEdit(selected)" icon="fa-edit" label="Modifier"></button>
+                                        <button class="ui-button-danger" type="button" pButton (click)="delete(selected)" icon="fa-trash-o" label="Supprimer"></button>
+                                    </ng-template>
+                                </p-column>
+
+                                <p-footer>
+                                    <div class="ui-helper-clearfix" style="width:100%"><button type="button" pButton icon="fa-plus" style="float:left" (click)="showDialogToAdd()"
+                                            label="Ajouter"></button></div>
+                                </p-footer>
+                            </p-dataTable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- / content -->
+
+
+<p-dialog header="Ajout d'une charge" [(visible)]="displayAddDialog" [responsive]="true" width="500" showEffect="fade" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="newCharge">
+        <form class="form form-validate floating-label" name="form" (ngSubmit)="f.form.valid && create(f);" #f="ngForm" novalidate>
+            <md-card>
+                <md-card-content>
+                    <md-input-container style="width:100%">
+                        <input type='number' mdInput placeholder="Première recompense" name="recompense1" [(ngModel)]="newCharge.recompense1">
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input type='number' mdInput placeholder="Deuxième recompense" name="recompense2" [(ngModel)]="newCharge.recompense2">
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input type='number' mdInput placeholder="Troixième recompense" name="recompense3" [(ngModel)]="newCharge.recompense3">
+                    </md-input-container>
+
+                </md-card-content>
+                <!--end .card-body -->
+                <md-card-actions>
+                    <button md-raised-button (click)="cancel()">Annuler</button>
+                    <button md-raised-button color='primary' type="submit">Enregister</button>
+                </md-card-actions>
+                <!--end .card-actionbar -->
+            </md-card>
+        </form>
+    </div>
+</p-dialog>
+
+
+<p-dialog header="Modification d'un chargement" [(visible)]="displayEditDialog" [responsive]="true" width="500" showEffect="fade"
+    [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selected">
+        <form class="form form-validate floating-label" name="form" (ngSubmit)="fe.form.valid && update()" #fe="ngForm" novalidate>
+            <md-card>
+                <md-card-content>
+                    <md-input-container style="width:100%">
+                        <input type='number' mdInput placeholder="Première recompense" name="recompense1" [(ngModel)]="selected.recompense1">
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input type='number' mdInput placeholder="Deuxième recompense" name="recompense2" [(ngModel)]="selected.recompense2">
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input type='number' mdInput placeholder="Troixième recompense" name="recompense3" [(ngModel)]="selected.recompense3">
+                    </md-input-container>
+
+                </md-card-content>
+                <!--end .card-body -->
+                <md-card-actions>
+                    <button md-raised-button (click)=" cancel()">Annuler</button>
+                    <button md-raised-button color='primary' type="submit">Modifier</button>
+                </md-card-actions>
+                <!--end .card-actionbar -->
+            </md-card>
+        </form>
+    </div>
+</p-dialog>
+
+<p-dialog header="Détails sur une charge" [(visible)]="displayDetailDialog" [responsive]="true" width="500" showEffect="fade"
+    [modal]="true">
+    <md-list>
+        <md-list-item> Recompense 1: {{selected.recompense1}} </md-list-item>
+        <md-list-item> Recompense 2: {{selected.recompense2}} </md-list-item>
+        <md-list-item> Recompense 3: {{selected.recompense3}} </md-list-item>
+    </md-list>
+
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <button type="button" pButton icon="fa-close" (click)=" close()" label="Fermer"></button>
+        </div>
+    </p-footer>
+</p-dialog>

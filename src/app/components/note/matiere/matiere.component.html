@@ -1,0 +1,237 @@
+<!-- content -->
+<div id="content" class="app-content" role="main">
+    <div class="box">
+        <!-- Content Navbar -->
+        <div class="navbar md-whiteframe-z1 no-radius blue">
+            <!-- Open side - Naviation on mobile -->
+            <a md-ink-ripple data-toggle="modal" data-target="#aside" class="navbar-item pull-left visible-xs visible-sm"><i class="mdi-navigation-menu i-24"></i></a>
+
+            <!-- Page title - Bind to $state's title -->
+            <div class="navbar-item pull-left h4">Notes d'une matière</div>
+
+            <!-- / -->
+            <!-- Common tools -->
+            <ul class="nav nav-sm navbar-tool pull-right">
+                <li>
+                    <a md-ink-ripple ui-toggle-class="show" target="#search">
+                        <i class="mdi-action-search i-24"></i>
+                    </a>
+                </li>
+            </ul>
+            <div class="pull-right" ui-view="navbar@"></div>
+            <!-- / -->
+            <!-- Search form -->
+            <div id="search" class="pos-abt w-full h-full blue hide">
+                <div class="box">
+                    <div class="box-col w-56 text-center">
+                        <!-- hide search form -->
+                        <a md-ink-ripple class="navbar-item inline" ui-toggle-class="show" target="#search"><i class="mdi-navigation-arrow-back i-24"></i></a>
+                    </div>
+                    <div class="box-col v-m">
+                        <!-- bind to app.search.content -->
+                        <input class="form-control input-lg no-bg no-border" placeholder="Rechercher" ng-model="app.search.content">
+                    </div>
+                    <div class="box-col w-56 text-center">
+                        <a md-ink-ripple class="navbar-item inline"></a>
+                    </div>
+                </div>
+            </div>
+            <!-- / -->
+        </div>
+        <!-- Content -->
+
+        <div class="box-row">
+            <div class="box-cell">
+                <div class="box-inner padding">
+                    <div class="panel panel-default">
+
+                        <div class="ui-grid ui-grid-responsive ui-fluid">
+                            <form class="form form-validate floating-label" name="form" (ngSubmit)="f.form.valid && filter(f);" #f="ngForm" novalidate>
+                                <md-card>
+                                    <md-card-content>
+
+                                        <div class="ui-grid-row">
+                                            <div class="ui-grid-col-1"><label>Annee:</label></div>
+                                            <div class="ui-grid-col-3">
+                                                <p-dropdown (onChange)="onAnneeChange($event)" required name='annee' [options]="annees" [(ngModel)]="anneeId" [style]="{'width':'100%'}"
+                                                    filter="filter">
+                                                    <ng-template let-etab pTemplate="item">
+                                                        <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                                            <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                                        </div>
+                                                    </ng-template>
+                                                </p-dropdown>
+                                            </div>
+
+                                            <div class="ui-grid-col-1"><label>Section:</label></div>
+                                            <div class="ui-grid-col-3">
+                                                <p-dropdown (onChange)="onSectionChange($event)" required name='section' [options]="sections" [(ngModel)]="sectionId" [style]="{'width':'100%'}"
+                                                    filter="filter">
+                                                    <ng-template let-etab pTemplate="item">
+                                                        <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                                            <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                                        </div>
+                                                    </ng-template>
+                                                </p-dropdown>
+                                            </div>
+
+                                            <div class="ui-grid-col-1"><label>Classe:</label></div>
+                                            <div class="ui-grid-col-3">
+                                                <p-dropdown (onChange)="onClasseChange($event)" required name='classe' [options]="classes" [(ngModel)]="classeId" [style]="{'width':'100%'}"
+                                                    filter="filter">
+                                                    <ng-template let-etab pTemplate="item">
+                                                        <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                                            <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                                        </div>
+                                                    </ng-template>
+                                                </p-dropdown>
+                                            </div>
+                                        </div>
+
+                                        <div class="ui-grid-row">
+                                            <div class="ui-grid-col-1"><label>Trimestre:</label></div>
+                                            <div class="ui-grid-col-3">
+                                                <p-dropdown (onChange)="onTrimestreChange($event)" required name='trimestre' [options]="trimestres" [(ngModel)]="trimestreId"
+                                                    [style]="{'width':'100%'}" filter="filter">
+                                                    <ng-template let-etab pTemplate="item">
+                                                        <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                                            <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                                        </div>
+                                                    </ng-template>
+                                                </p-dropdown>
+                                            </div>
+
+                                            <div class="ui-grid-col-1"><label>Séquence:</label></div>
+                                            <div class="ui-grid-col-3">
+                                                <p-dropdown (onChange)="onSequenceChange($event)" required name='sequence' [options]="sequences" [(ngModel)]="sequenceId"
+                                                    [style]="{'width':'100%'}" filter="filter">
+                                                    <ng-template let-etab pTemplate="item">
+                                                        <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                                            <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                                        </div>
+                                                    </ng-template>
+                                                </p-dropdown>
+                                            </div>
+
+                                            <div class="ui-grid-col-1"><label>Matière:</label></div>
+                                            <div class="ui-grid-col-3">
+                                                <p-dropdown required name='matiere' [options]="matieres" [(ngModel)]="matiereId" [style]="{'width':'100%'}" filter="filter">
+                                                    <ng-template let-etab pTemplate="item">
+                                                        <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                                            <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                                        </div>
+                                                    </ng-template>
+                                                </p-dropdown>
+                                            </div>
+                                        </div>
+
+                                    </md-card-content>
+                                    <md-card-actions>
+                                        <button md-raised-button color='primary' type="submit">Afficher les notes</button>
+                                    </md-card-actions>
+                                </md-card>
+                                <div class="ui-grid-row ">
+                                    <div class="ui-grid-col-2">
+                                        <button [disabled]="!f.valid" type="button" pButton icon="fa-plus" style="float: left" (click)="showDialogToAdd()" label="Ajouter"></button></div>
+                                    <div class="ui-grid-col-2">
+                                        <button [disabled]="!f.valid" type="button" pButton icon="fa-file-excel-o" (click)="showDialogImport()" label="Importer un fichier"></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="table-responsive">
+                            <p-dataTable emptyMessage="Aucun élément à afficher." [(selection)]="selectedNote" class="table table-striped no-margin"
+                                selectionMode="single" dataKey="id" [value]="notes" [rows]="10" [paginator]="true" #dt>
+                                <p-column header="No" [style]="{'width':'5%'}">
+                                    <ng-template let-ri="rowIndex" pTemplate="body">
+                                        {{ri+1}}
+                                    </ng-template>
+                                </p-column>
+                                <p-column [style]="{'width':'10%'}" field="eleve.matricule" header="Matricule"  [filter]="true" filterPlaceholder="Rechercher"></p-column>
+                                <p-column field="eleve.nom" header="Noms et prénom" [sortable]="true" [filter]="true" filterPlaceholder="Rechercher">
+                                    <ng-template let-col="rowData" pTemplate="body">
+                                        <span>{{col.eleve.nom}} {{col.eleve.prenom}}</span>
+                                    </ng-template>
+                                </p-column>
+                                <p-column [style]="{'width':'8%'}" field="note_sequence" header="Note/20" [sortable]="true"  >
+                                    <ng-template let-col="rowData" pTemplate="body">
+                                        <span>{{col.note_sequence}} </span>
+                                    </ng-template>
+                                </p-column>
+                                <p-column field="appreciation" header="Appréciation" ></p-column>
+                                <p-column [style]="{'width':'5%'}" field="rang" header="Rang" [sortable]="true" ></p-column>
+                                <p-column field="observations" header="Observations" ></p-column>
+
+                            </p-dataTable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- / content -->
+
+
+<p-dialog header="Ajout d'une note" [(visible)]="displayAddDialog" [responsive]="true" width="500" showEffect="fade" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="newNote">
+        <form class="form form-validate floating-label" name="form" (ngSubmit)="f.form.valid && create(f);" #f="ngForm" novalidate>
+            <md-card>
+                <md-card-content>
+
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-3"><label>Elève:</label></div>
+                        <div class="ui-grid-col-9">
+                            <p-dropdown required name='eleve' [options]="eleves" [(ngModel)]="eleveId" [style]="{'width':'100%'}" filter="filter">
+                                <ng-template let-etab pTemplate="item">
+                                    <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
+                                        <div style="font-size:14px;margin-top:4px">{{etab.label}}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </div>
+                    </div>
+
+                    <md-input-container style="width:100%">
+                        <input type="number" mdInput placeholder="Note/20" name="note" [(ngModel)]="newNote.note_sequence" required>
+                        <md-error>La note est obligatoire</md-error>
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Observations" name="observations" [(ngModel)]="newNote.observations">
+                    </md-input-container>
+                </md-card-content>
+                <md-card-actions>
+                    <button md-raised-button (click)="cancel()">Annuler</button>
+                    <button md-raised-button color='primary' type="submit">Enregister</button>
+                </md-card-actions>
+            </md-card>
+        </form>
+    </div>
+</p-dialog>
+
+
+<p-dialog header="Modification d'une note" [(visible)]="displayEditDialog" [responsive]="true" width="500" showEffect="fade"
+    [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selected">
+        <form class="form form-validate floating-label" name="form" (ngSubmit)="fe.form.valid && update();" #fe="ngForm" novalidate>
+            <md-card>
+                <md-card-content>
+                    <md-input-container style="width:100%">
+                        <input type="number" mdInput placeholder="Note/20" name="note" [(ngModel)]="selected.note_sequence" required>
+                        <md-error>La note est obligatoire</md-error>
+                    </md-input-container>
+
+                    <md-input-container style="width:100%">
+                        <input mdInput placeholder="Observations" name="observations" [(ngModel)]="selected.observations">
+                    </md-input-container>
+                </md-card-content>
+                <md-card-actions>
+                    <button md-raised-button (click)="cancel()">Annuler</button>
+                    <button md-raised-button color='primary' type="submit">Modifier</button>
+                </md-card-actions>
+            </md-card>
+        </form>
+    </div>
+</p-dialog>
